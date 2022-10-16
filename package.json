@@ -1,0 +1,45 @@
+{
+  "name": "@ucfopen/materia",
+  "license": "AGPL-3.0",
+  "description": "Engage students with easily embedded apps for online courses.",
+  "author": "University of Central Florida, Center for Distributed Learning",
+  "homepage": "https://ucfopen.github.io/Materia-Docs",
+  "repository": "https://github.com/ucfopen/Materia.git",
+  "scripts": {
+    "build": "node process_assets.js",
+    "build:watch": "concurrently \"yarn build:watchmateria\" \"yarn build:watchclientassets\" \"yarn build:browsersync\"",
+    "build:watchmateria": "nodemon -e js,css -w ./node_modules/materia-server-client-assets/dist process_assets.js",
+    "build:watchclientassets": "cd node_modules/materia-server-client-assets && yarn build-watch",
+    "build:browsersync": "browser-sync start --files \"public/css/**/*.css,public/js/**/*.js\"",
+    "postinstall": "napa && npm run build",
+    "devassets:git": "cd .. && git clone https://github.com/ucfopen/Materia-Server-Client-Assets.git Materia-Server-Client-Assets",
+    "devassets:link": "cd ../Materia-Server-Client-Assets && yarn install && yarn link && cd - && yarn link materia-server-client-assets",
+    "devassets:unlink": "yarn unlink materia-server-client-assets && cd ../Materia-Server-Client-Assets && yarn unlink && cd - && yarn install",
+    "test:php": "echo 'Additional env setup needed to run on host. You probably want docker/run_tests.sh'; composer run testci",
+    "test:php:watch": "nodemon -e php -i node_modules/ -i coverage/ -i docker/ -i public/widget -i fuel/vendor/ -i fuel/core/ --exec 'composer run test || exit 1'"
+  },
+  "dependencies": {
+    "fs-extra": "^8.0.1",
+    "materia-server-client-assets": "2.4.0",
+    "napa": "^3.0.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.5",
+    "concurrently": "^5.1.0",
+    "nodemon": "^2.0.2"
+  },
+  "nodemonConfig": {
+    "delay": "500",
+    "ignoreRoot": [
+      ".git"
+    ]
+  },
+  "napa": {
+    "datatables": "DataTables/DataTables#1.10.16",
+    "labjs": "getify/LABjs#2.0.3",
+    "swfobject": "swfobject/swfobject#2.2",
+    "hammerjs": "hammerjs/hammer.js#v2.0.8",
+    "spinjs": "https://github.com/fgnass/spin.js.git#1.2.8"
+  },
+  "version": "9.0.1"
+}
